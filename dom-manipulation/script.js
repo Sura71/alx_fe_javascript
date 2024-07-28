@@ -16,6 +16,7 @@ let quotes = JSON.parse(localStorage.getItem("quotes")) || [
 
 const quoteDisplay = document.getElementById("quoteDisplay");
 const newQuoteButton = document.getElementById("newQuote");
+const addQuoteButton = document.getElementById("addQuoteButton");
 const exportQuotesButton = document.getElementById("exportQuotes");
 const importFileInput = document.getElementById("importFile");
 const categoryFilter = document.getElementById("categoryFilter");
@@ -175,6 +176,7 @@ const syncQuotes = async () => {
 
 // Event Listeners
 newQuoteButton.addEventListener("click", showRandomQuote);
+addQuoteButton.addEventListener("click", addQuote);
 exportQuotesButton.addEventListener("click", exportQuotesToJson);
 importFileInput.addEventListener("change", importFromJsonFile);
 
