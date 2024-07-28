@@ -1,6 +1,4 @@
-const quoteDisplay = document.getElementById("quoteDisplay");
-const newQuoteButton = document.getElementById("newQuote");
-
+// Initialize the quotes array from local storage or default quotes
 let quotes = JSON.parse(localStorage.getItem("quotes")) || [
   {
     text: "The only limit to our realization of tomorrow is our doubts of today.",
@@ -15,6 +13,11 @@ let quotes = JSON.parse(localStorage.getItem("quotes")) || [
     category: "Life",
   },
 ];
+
+const quoteDisplay = document.getElementById("quoteDisplay");
+const newQuoteButton = document.getElementById("newQuote");
+const exportQuotesButton = document.getElementById("exportQuotes");
+const importFileInput = document.getElementById("importFile");
 
 // Function to display a random quote
 const showRandomQuote = () => {
@@ -31,6 +34,7 @@ const showRandomQuote = () => {
   quoteCategory.textContent = `Category: ${randomQuote.category}`;
   quoteDisplay.appendChild(quoteCategory);
 
+  // Save the last viewed quote to session storage
   sessionStorage.setItem("lastQuote", JSON.stringify(randomQuote));
 };
 
@@ -80,12 +84,20 @@ const importFromJsonFile = (event) => {
 // Event listener for the "Show New Quote" button
 newQuoteButton.addEventListener("click", showRandomQuote);
 
+// Event listener for the "Export Quotes" button
+exportQuotesButton.addEventListener("click", exportQuotesToJson);
+
+// Event listener for the "Import Quotes" input
+importFileInput.addEventListener("change", importFromJsonFile);
+
 // Initial call to display a random quote when the page loads
 showRandomQuote();
 
 // Load the last viewed quote from session storage if available
 const lastQuote = JSON.parse(sessionStorage.getItem("lastQuote"));
 if (lastQuote) {
+  quoteDisplay.innerHTML = "";
+
   const quoteText = document.createElement("p");
   quoteText.textContent = `Quote: ${lastQuote.text}`;
   quoteDisplay.appendChild(quoteText);
