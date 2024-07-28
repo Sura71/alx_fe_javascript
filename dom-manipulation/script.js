@@ -1,3 +1,4 @@
+// Initialize quotes array from localStorage or with default quotes
 let quotes = JSON.parse(localStorage.getItem("quotes")) || [
   {
     text: "The only limit to our realization of tomorrow is our doubts of today.",
@@ -20,6 +21,7 @@ const importFileInput = document.getElementById("importFile");
 const categoryFilter = document.getElementById("categoryFilter");
 const notification = document.getElementById("notification");
 
+// Populate categories in the dropdown
 const populateCategories = () => {
   const categories = [...new Set(quotes.map((quote) => quote.category))];
   categoryFilter.innerHTML = '<option value="all">All Categories</option>';
@@ -36,6 +38,7 @@ const populateCategories = () => {
   }
 };
 
+// Show a random quote based on the selected category
 const showRandomQuote = () => {
   quoteDisplay.innerHTML = "";
 
@@ -66,6 +69,7 @@ const showRandomQuote = () => {
   sessionStorage.setItem("lastQuote", JSON.stringify(randomQuote));
 };
 
+// Add a new quote and update local storage and server
 const addQuote = async () => {
   const newQuoteText = document.getElementById("newQuoteText").value;
   const newQuoteCategory = document.getElementById("newQuoteCategory").value;
@@ -82,12 +86,14 @@ const addQuote = async () => {
   }
 };
 
+// Filter quotes based on the selected category
 const filterQuotes = () => {
   const selectedCategory = categoryFilter.value;
   localStorage.setItem("lastSelectedCategory", selectedCategory);
   showRandomQuote();
 };
 
+// Export quotes to a JSON file
 const exportQuotesToJson = () => {
   const dataStr = JSON.stringify(quotes, null, 2);
   const dataBlob = new Blob([dataStr], { type: "application/json" });
@@ -102,6 +108,7 @@ const exportQuotesToJson = () => {
   document.body.removeChild(downloadLink);
 };
 
+// Import quotes from a JSON file
 const importFromJsonFile = (event) => {
   const fileReader = new FileReader();
   fileReader.onload = (e) => {
@@ -114,6 +121,7 @@ const importFromJsonFile = (event) => {
   fileReader.readAsText(event.target.files[0]);
 };
 
+// Fetch quotes from the mock server
 const fetchQuotesFromServer = async () => {
   try {
     const response = await fetch("https://jsonplaceholder.typicode.com/posts");
@@ -128,6 +136,7 @@ const fetchQuotesFromServer = async () => {
   }
 };
 
+// Post a new quote to the mock server
 const postQuoteToServer = async (quote) => {
   try {
     const response = await fetch("https://jsonplaceholder.typicode.com/posts", {
@@ -143,6 +152,7 @@ const postQuoteToServer = async (quote) => {
   }
 };
 
+// Sync quotes with the server and handle conflicts
 const syncQuotes = async () => {
   const serverQuotes = await fetchQuotesFromServer();
   const localQuoteTexts = quotes.map((quote) => quote.text);
@@ -163,10 +173,12 @@ const syncQuotes = async () => {
   }
 };
 
+// Event Listeners
 newQuoteButton.addEventListener("click", showRandomQuote);
 exportQuotesButton.addEventListener("click", exportQuotesToJson);
 importFileInput.addEventListener("change", importFromJsonFile);
 
+// Initialize the application
 populateCategories();
 showRandomQuote();
 
@@ -183,5 +195,6 @@ if (lastQuote) {
   quoteDisplay.appendChild(quoteCategory);
 }
 
+// Periodically sync quotes with the server
 setInterval(syncQuotes, 60000);
 syncQuotes();
